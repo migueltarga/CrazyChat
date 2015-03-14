@@ -1,0 +1,38 @@
+<div class="container main">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-xs-12">
+                <select class="form-control" ng-model="category" ng-change="updateSubcategory()" ng-options="cat.id as cat.name for cat in categories">
+                    <option value=""> - Selecione uma Categoria -</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <select class="form-control" ng-model="subcategory" ng-change="updateRooms()" ng-options="cat.id as cat.name for cat in subCategories">
+                    <option value="">- Selecione uma Subcategoria -</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <table class="table table-condensed" id="tbRooms">
+                    <thead>
+                        <tr>
+                            <th>Sala</th>
+                            <th>Pessoas</th>
+                            <th>Entrar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="room in rooms" class="text-center">
+                            <td>{{room.name}}</td>
+                            <td>{{room.people}}</td>
+                            <td><i class="glyphicon glyphicon-log-in mao" ng-click="enterRoom(room)"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
