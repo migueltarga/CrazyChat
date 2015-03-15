@@ -42,11 +42,16 @@ angular.module('CrazyChat.controllers', [])
     ])
     .controller('captchaCtrl', ['$scope', '$modalInstance', '$sce', 'token', 'BOL',
         function($scope, $modalInstance, $sce, token, BOL) {
+            $scope.error = false;
             $scope.captcha = $sce.trustAsResourceUrl('http://bpbol.captcha.uol.com.br/' + token + '.jpg');
+            $scope.closeAlert = function(){
+                $scope.error = false;
+            }
             $scope.cancel = function() {
                 $modalInstance.dismiss('cancel');
             };
             $scope.submit = function() {
+                $scope.error = false;
                 if(!$scope.text_captcha){
                     $scope.error = 'Digite o que você vê na imagem a cima.'
                     return;
@@ -54,7 +59,7 @@ angular.module('CrazyChat.controllers', [])
                 BOL.postCaptcha($scope.text_captcha).then(function(result){
 
                 }, function(error){
-                    console.log('ERROR', error)
+                    $scope.error = error;
                 });
                 //$modalInstance.close($scope.text_captcha);
             };

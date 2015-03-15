@@ -83,6 +83,7 @@ angular.module('CrazyChat.services', [])
 
             getCaptcha: function(id) {
                 var def = $q.defer();
+                if(!id) id = room_id;
                 $http.get('http://bpbol.uol.com.br/goroom.html?nodeid=' + id)
                     .success(function(data) {
                         room_id = id;
