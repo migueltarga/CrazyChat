@@ -1,45 +1,62 @@
 angular.module('CrazyChat.controllers', [])
-    .controller('mainCtrl', ['$scope', function($scope) {}])
-    .controller('conectorCtrl', ['$scope', 'BOL', '$modal', function($scope, BOL, $modal) {
+    .controller('conectorCtrl', ['$scope', 'BOL', '$modal',
+        function($scope, BOL, $modal) {
 
-        BOL.getCategories().then(function(cat) {
-            $scope.categories = cat;
-        })
-
-        $scope.updateSubcategory = function() {
-            BOL.getSubCategories($scope.category).then(function(subCategories) {
-                $scope.subCategories = subCategories;
+            BOL.getCategories().then(function(cat) {
+                $scope.categories = cat;
             })
-        }
 
-        $scope.updateRooms = function() {
-            BOL.getRooms($scope.subcategory).then(function(rooms) {
-                $scope.rooms = rooms;
-            })
-        }
+            $scope.updateSubcategory = function() {
+                BOL.getSubCategories($scope.category).then(function(subCategories) {
+                    $scope.subCategories = subCategories;
+                })
+            }
 
-        $scope.enterRoom = function(room) {
-            BOL.getCaptcha(room.id).then(function(result) {
-                var modal = $modal.open({
-                    templateUrl: 'views/modal_captcha.html',
-                    size: 'sm',
-                    backdrop: 'static',
-                    controller: ['$scope', '$modalInstance', '$sce', function($scope, $modalInstance, $sce) {
-                        $scope.loading = true;
-                        $scope.captcha = $sce.trustAsResourceUrl('http://bpbol.captcha.uol.com.br/' + result + '.jpg');
-                        $scope.cancel = function() {
-                            $modalInstance.dismiss('cancel');
-                        };
-                        $scope.save = function() {
-                            $modalInstance.close($scope.text_captcha);
-                        };
-                    }]
+            $scope.updateRooms = function() {
+                BOL.getRooms($scope.subcategory).then(function(rooms) {
+                    $scope.rooms = rooms;
+                })
+            }
+
+            $scope.enterRoom = function(room) {
+                BOL.getCaptcha(room.id).then(function(result) {
+                    var modal = $modal.open({
+                        templateUrl: 'views/modal_captcha.html',
+                        size: 'sm',
+                        backdrop: 'static',
+                        controller: 'captchaCtrl',
+                        resolve: {
+                            token: function() {
+                                return result;
+                            }
+                        }
+                    });
+                    modal.result.then(function(user) {
+
+                    }, function() {
+
+                    });
+                })
+            }
+        }
+    ])
+    .controller('captchaCtrl', ['$scope', '$modalInstance', '$sce', 'token', 'BOL',
+        function($scope, $modalInstance, $sce, token, BOL) {
+            $scope.captcha = $sce.trustAsResourceUrl('http://bpbol.captcha.uol.com.br/' + token + '.jpg');
+            $scope.cancel = function() {
+                $modalInstance.dismiss('cancel');
+            };
+            $scope.submit = function() {
+                if(!$scope.text_captcha){
+                    $scope.error = 'Digite o que você vê na imagem a cima.'
+                    return;
+                }
+                BOL.postCaptcha($scope.text_captcha).then(function(result){
+
+                }, function(error){
+                    console.log('ERROR', error)
                 });
-                modalfirst_access.result.then(function(user) {
-
-                }, function() {
-
-                });
-            })
+                //$modalInstance.close($scope.text_captcha);
+            };
         }
-    }]);
+    ]);
