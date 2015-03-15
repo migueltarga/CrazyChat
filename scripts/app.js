@@ -8,14 +8,18 @@ angular.module('CrazyChat', [
 config([
     '$routeProvider',
     function($routeProvider) {
-        $routeProvider.
-        when('/', {
-            templateUrl: 'views/main.html',
-            controller: 'conectorCtrl'
-        }).
-        otherwise({
-            redirectTo: '/'
-        });
+        $routeProvider
+            .when('/', {
+                templateUrl: 'views/main.html',
+                controller: 'conectorCtrl'
+            })
+            .when('/room', {
+                templateUrl: 'views/room.html',
+                controller: 'roomCtrl'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
     },
 
 ]);

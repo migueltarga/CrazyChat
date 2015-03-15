@@ -1,6 +1,6 @@
 angular.module('CrazyChat.controllers', [])
-    .controller('conectorCtrl', ['$scope', 'BOL', '$modal',
-        function($scope, BOL, $modal) {
+    .controller('conectorCtrl', ['$scope', 'BOL', '$modal', '$location',
+        function($scope, BOL, $modal, $location) {
 
             BOL.getCategories().then(function(cat) {
                 $scope.categories = cat;
@@ -31,10 +31,8 @@ angular.module('CrazyChat.controllers', [])
                             }
                         }
                     });
-                    modal.result.then(function(user) {
-
-                    }, function() {
-
+                    modal.result.then(function(result) {
+                        $location.path("/room");
                     });
                 })
             }
@@ -44,7 +42,7 @@ angular.module('CrazyChat.controllers', [])
         function($scope, $modalInstance, $sce, token, BOL) {
             $scope.error = false;
             $scope.captcha = $sce.trustAsResourceUrl('http://bpbol.captcha.uol.com.br/' + token + '.jpg');
-            $scope.closeAlert = function(){
+            $scope.closeAlert = function() {
                 $scope.error = false;
             }
             $scope.cancel = function() {
@@ -52,16 +50,22 @@ angular.module('CrazyChat.controllers', [])
             };
             $scope.submit = function() {
                 $scope.error = false;
-                if(!$scope.text_captcha){
+                if (!$scope.text_captcha) {
                     $scope.error = 'Digite o que você vê na imagem a cima.'
                     return;
                 }
-                BOL.postCaptcha($scope.text_captcha).then(function(result){
-
-                }, function(error){
+                BOL.postCaptcha($scope.text_captcha).then(function(result) {
+                    $modalInstance.close(true);
+                }, function(error) {
                     $scope.error = error;
                 });
                 //$modalInstance.close($scope.text_captcha);
             };
         }
-    ]);
+    ])
+    .controller('roomCtrl', ['$scope', 'BOL',
+        function($scope, BOL) {
+
+
+        }
+    ])
