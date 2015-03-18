@@ -18,7 +18,9 @@ angular.module('CrazyChat.services', [])
     .factory('BOL', function($http, $q) {
 
         var captcha_token = null,
-            room_id = null;
+            room_id = null,
+            listen_url = null;
+
         return {
             getCategories: function() {
                 var def = $q.defer();
@@ -121,12 +123,16 @@ angular.module('CrazyChat.services', [])
                     .success(function(data) {
                         if(error = data.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
                             return def.reject(_this.ErrorMensagem(error[1]));
-                        def.resolve(data.match(/listenURL\s=\s\x27([^\x27]+)/)[1]);
+                        listen_url = data.match(/listenURL\s=\s\x27([^\x27]+)/)[1];
+                        def.resolve(listen_url);
                     })
                     .error(function() {
                         def.reject("Failed to post captcha");
                     });
                 return def.promise;
+            },
+            getListen: function(){
+                return listen_url;
             },
             serializeData: function(data) {
                 if (!angular.isObject(data)) {

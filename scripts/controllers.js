@@ -65,7 +65,37 @@ angular.module('CrazyChat.controllers', [])
     ])
     .controller('roomCtrl', ['$scope', 'BOL',
         function($scope, BOL) {
+            var xhr = new XMLHttpRequest(),
+                len = 0,
+                msgToken = false;
 
+            function Sort_CI(a, b) {
+                return (a.toUpperCase() > b.toUpperCase()) ? -1 : 1;
+            }
+
+            xhr.onreadystatechange = function() {
+                if (xhr.status == 200 && xhr.readyState >= 3) {
+                    buffer = xhr.responseText.substr(len, xhr.responseText.length - len);
+                    len = xhr.responseText.length;
+                    if (!msgToken && /Batepapo.query_str/.test(buffer)) {
+                        msgtoken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
+                        buffer = '';
+                    }
+                    if (/<div class=\x22msgContentBox/.test(buffer)) {
+                        //parse message
+                    }
+                    if (/Load_Combo.\x22re/.test(buffer)) {
+                        var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/)[1];
+                        $scope.$apply(function() {
+                            $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
+                        })
+                    }
+                    buffer = '';
+                }
+            };
+
+            xhr.open('GET', BOL.getListen(), true);
+            xhr.send();
 
         }
     ])
