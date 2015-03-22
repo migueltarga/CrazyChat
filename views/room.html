@@ -1,8 +1,26 @@
-<div class="container main">
-    <div data-ng-repeat="user in users">
-        {{user}}
+<div id="wrapper">
+    <div id="topPanel">
+        <div id="chat">
+            <div data-ng-repeat="msg in messages">
+                {{msg.time}} <span ng-style="{'color':msg.color}"><b>{{msg.sender}}</b></span> <i>{{msg.action}}</i> <b>{{msg.receiver}}</b>: {{msg.message}}
+            </div>
+        </div>
+        <div id="userlist">
+            <ul class="nav nav-list" id="nicks">
+                <li data-ng-repeat="user in users">
+                    <i class="glyphicon glyphicon-user"></i> {{user}}
+                </li>
+            </ul>
+        </div>
     </div>
-    <div data-ng-repeat="msg in messages">
-        {{msg.text}}
+    <div id="msgPanel">
+        <div class="col-lg-12">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Digite uma mensagem...">
+                <span class="input-group-btn">
+			        <button class="btn btn-info" type="button">Enviar</button>
+			    </span>
+            </div>
+        </div>
     </div>
 </div>

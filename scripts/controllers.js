@@ -69,20 +69,39 @@ angular.module('CrazyChat.controllers', [])
                 len = 0,
                 msgToken = false;
 
+            $scope.users = [];
+            $scope.messages = [];
+
             function Sort_CI(a, b) {
                 return (a.toUpperCase() > b.toUpperCase()) ? -1 : 1;
             }
 
             xhr.onreadystatechange = function() {
+                console.log(xhr.status, xhr.readyState);
                 if (xhr.status == 200 && xhr.readyState >= 3) {
                     buffer = xhr.responseText.substr(len, xhr.responseText.length - len);
                     len = xhr.responseText.length;
+                    //console.log(buffer);
                     if (!msgToken && /Batepapo.query_str/.test(buffer)) {
                         msgtoken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
                         buffer = '';
                     }
                     if (/<div class=\x22msgContentBox/.test(buffer)) {
-                        //parse message
+
+                        var msg = buffer.match(/<small>([^<]+)<\/small>\n.+color="(#[A-F\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/);
+                        if(msg){
+                            $scope.messages.push({
+                                type: (msg[7]) ? 'join' : 'msg',
+                                time : msg[1],
+                                color : msg[2],
+                                sender: msg[3],
+                                pvt: (msg[5]) ? true : false,
+                                action: (msg[6]) ? msg[6] : '',
+                                receiver: (msg[8]) ? msg[8] : '',
+                                message : (msg[9]) ? msg[9].trim() : '',
+                                icon: (msg[11]) ? msg[1] : ''
+                            });
+                        }
                     }
                     if (/Load_Combo.\x22re/.test(buffer)) {
                         var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/)[1];
@@ -91,11 +110,11 @@ angular.module('CrazyChat.controllers', [])
                         })
                     }
                     buffer = '';
+                }else if (xhr.readyState == 4) {
+                    console.log('DESCONECTOU');
                 }
             };
-
             xhr.open('GET', BOL.getListen(), true);
             xhr.send();
-
         }
     ])

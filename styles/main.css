@@ -16,3 +16,57 @@ body {
 .mao{
     cursor: pointer;
 }
+
+
+#wrapper{
+    position:absolute;
+    top:40px;
+    bottom:0;
+    left:0;
+    right:0;
+    border:1px solid #333;      
+}
+
+#topPanel{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+#chat{
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:220px; 
+    background-color: #fff;  
+    overflow:auto;    
+}
+
+#userlist{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:220px;
+    right:0; 
+    overflow:auto;   
+    background-color: #F5F5F5;
+    border: 1px solid #E3E3E3;
+    -webkit-user-select: none; 
+}
+
+#msgPanel{
+    padding: 20px 0;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    position: fixed;
+	 background-color: #252728;
+}
+.nav-list > li > a {
+	padding: 3px 5px;
+}
+
