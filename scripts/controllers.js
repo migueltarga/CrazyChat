@@ -69,8 +69,16 @@ angular.module('CrazyChat.controllers', [])
                 len = 0,
                 msgToken = false;
 
+            $scope.nick = BOL.getNick();
+
             $scope.users = [];
             $scope.messages = [];
+
+            $scope.sendMsg = function(){
+                console.log('Cliquei', msgToken);
+                if(!msgToken) return;
+                BOL.sendMessage(msgToken, 'Testando');
+            }
 
             function Sort_CI(a, b) {
                 return (a.toUpperCase() > b.toUpperCase()) ? -1 : 1;
@@ -81,25 +89,26 @@ angular.module('CrazyChat.controllers', [])
                 if (xhr.status == 200 && xhr.readyState >= 3) {
                     buffer = xhr.responseText.substr(len, xhr.responseText.length - len);
                     len = xhr.responseText.length;
-                    //console.log(buffer);
+
                     if (!msgToken && /Batepapo.query_str/.test(buffer)) {
-                        msgtoken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
+                        msgToken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
                         buffer = '';
                     }
                     if (/<div class=\x22msgContentBox/.test(buffer)) {
 
-                        var msg = buffer.match(/<small>([^<]+)<\/small>\n.+color="(#[A-F\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/);
+                        var msg = buffer.match(/(tsPerfilBP,'([^\x27]+)'\);[\r\n\s]+<\/script>[\r\n\s]+)?<small>([^<]+)<\/small>\n.+color="(#[A-Fa-f\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/);
                         if(msg){
                             $scope.messages.push({
                                 type: (msg[7]) ? 'join' : 'msg',
-                                time : msg[1],
-                                color : msg[2],
-                                sender: msg[3],
-                                pvt: (msg[5]) ? true : false,
-                                action: (msg[6]) ? msg[6] : '',
-                                receiver: (msg[8]) ? msg[8] : '',
-                                message : (msg[9]) ? msg[9].trim() : '',
-                                icon: (msg[11]) ? msg[1] : ''
+                                uolk: (msg[2]) ? 'http://'+msg[2]+'.avataruol.com.br/thumb_avatar.jpg' : '',
+                                time : msg[3],
+                                color : msg[4],
+                                sender: msg[5],
+                                pvt: (msg[7]) ? true : false,
+                                action: (msg[8]) ? msg[8] : '',
+                                receiver: (msg[10]) ? msg[10] : '',
+                                message : (msg[11]) ? msg[11].trim() : '',
+                                icon: (msg[12]) ? msg[12] : ''
                             });
                         }
                     }
@@ -111,6 +120,8 @@ angular.module('CrazyChat.controllers', [])
                     }
                     buffer = '';
                 }else if (xhr.readyState == 4) {
+                    if(error = xhr.responseText.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
+                        alert(BOL.ErrorMensagem(error));
                     console.log('DESCONECTOU');
                 }
             };

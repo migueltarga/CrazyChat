@@ -19,9 +19,15 @@ angular.module('CrazyChat.services', [])
 
         var captcha_token = null,
             room_id = null,
-            listen_url = null;
+            listen_url = null,
+            nick = 'Targa',
+            color = '#000000';
 
         return {
+            getNick: function() {
+                return nick;
+            },
+
             getCategories: function() {
                 var def = $q.defer();
                 $http.get('http://bpbol.uol.com.br/')
@@ -85,7 +91,7 @@ angular.module('CrazyChat.services', [])
 
             getCaptcha: function(id) {
                 var def = $q.defer();
-                if(!id) id = room_id;
+                if (!id) id = room_id;
                 $http.get('http://bpbol.uol.com.br/goroom.html?nodeid=' + id)
                     .success(function(data) {
                         room_id = id;
@@ -111,17 +117,15 @@ angular.module('CrazyChat.services', [])
                             typePage: 'ROOM',
                             text: captcha_text,
                             key: captcha_token,
-                            ni: 'Targa',
-                            co: '#000000',
-                            x: '12',
-                            y: '11'
+                            ni: nick,
+                            co: color
                         }),
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
                     })
                     .success(function(data) {
-                        if(error = data.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
+                        if (error = data.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
                             return def.reject(_this.ErrorMensagem(error[1]));
                         listen_url = data.match(/listenURL\s=\s\x27([^\x27]+)/)[1];
                         def.resolve(listen_url);
@@ -131,8 +135,34 @@ angular.module('CrazyChat.services', [])
                     });
                 return def.promise;
             },
-            getListen: function(){
+            getListen: function() {
                 return listen_url;
+            },
+            sendMessage: function(token, msg) {
+                var def = $q.defer(),
+                    _this = this;
+                $http({
+                        method: 'POST',
+                        url: 'http://bp3.bpbol.uol.com.br/send.html?ro='+token,
+                        data: this.serializeData({
+                            pk: '',
+                            re: '',
+                            st: 'fala+para',
+                            so: 'NULL',
+                            ei: 'NULL',
+                            me: msg
+                        }),
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .success(function(data) {
+                        def.resolve(data);
+                    })
+                    .error(function() {
+                        def.reject("Failed to post captcha");
+                    });
+                return def.promise;
             },
             serializeData: function(data) {
                 if (!angular.isObject(data)) {

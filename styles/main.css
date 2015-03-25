@@ -38,7 +38,7 @@ body {
 #chat{
     position: absolute;
     top:0;
-    bottom:0;
+    bottom:74px;
     left:0;
     right:220px; 
     background-color: #fff;  
@@ -48,7 +48,7 @@ body {
 #userlist{
     position: absolute;
     top:0;
-    bottom:0;
+    bottom:74px;
     width:220px;
     right:0; 
     overflow:auto;   
