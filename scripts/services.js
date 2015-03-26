@@ -147,7 +147,7 @@ angular.module('CrazyChat.services', [])
                         data: this.serializeData({
                             pk: '',
                             re: '',
-                            st: 'fala+para',
+                            st: 'fala para',
                             so: 'NULL',
                             ei: 'NULL',
                             me: msg

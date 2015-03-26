@@ -70,14 +70,14 @@ angular.module('CrazyChat.controllers', [])
                 msgToken = false;
 
             $scope.nick = BOL.getNick();
-
+            $scope.autoscroll = true;
             $scope.users = [];
             $scope.messages = [];
 
             $scope.sendMsg = function(){
-                console.log('Cliquei', msgToken);
                 if(!msgToken) return;
-                BOL.sendMessage(msgToken, 'Testando');
+                BOL.sendMessage(msgToken, $scope.msgtext);
+                $scope.msgtext = '';
             }
 
             function Sort_CI(a, b) {
@@ -92,12 +92,10 @@ angular.module('CrazyChat.controllers', [])
 
                     if (!msgToken && /Batepapo.query_str/.test(buffer)) {
                         msgToken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
-                        buffer = '';
                     }
                     if (/<div class=\x22msgContentBox/.test(buffer)) {
-
-                        var msg = buffer.match(/(tsPerfilBP,'([^\x27]+)'\);[\r\n\s]+<\/script>[\r\n\s]+)?<small>([^<]+)<\/small>\n.+color="(#[A-Fa-f\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/);
-                        if(msg){
+                        var msgs = /(tsPerfilBP,'([^\x27]+)'\);[\r\n\s]+<\/script>[\r\n\s]+)?<small>([^<]+)<\/small>\n.+color="(#[A-Fa-f\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/g.execAll(buffer);
+                        angular.forEach(msgs, function(msg) {
                             $scope.messages.push({
                                 type: (msg[7]) ? 'join' : 'msg',
                                 uolk: (msg[2]) ? 'http://'+msg[2]+'.avataruol.com.br/thumb_avatar.jpg' : '',
@@ -110,18 +108,22 @@ angular.module('CrazyChat.controllers', [])
                                 message : (msg[11]) ? msg[11].trim() : '',
                                 icon: (msg[12]) ? msg[12] : ''
                             });
-                        }
+                        });
                     }
                     if (/Load_Combo.\x22re/.test(buffer)) {
-                        var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/)[1];
+                        var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/);
+                        if(lista)
+                            lista = lista[1]; //gambiarra
                         $scope.$apply(function() {
                             $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
                         })
                     }
                     buffer = '';
                 }else if (xhr.readyState == 4) {
-                    if(error = xhr.responseText.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
+                    if(error = xhr.responseText.match(/uol.com.br\/goroom.html?erro=(\d+)/))
                         alert(BOL.ErrorMensagem(error));
+                    if('/uol.com.br\/esgotada.jhtm/'.test(xhr.responseText))
+                        alert('Sala cheia');
                     console.log('DESCONECTOU');
                 }
             };
