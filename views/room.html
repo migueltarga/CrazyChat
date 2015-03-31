@@ -16,8 +16,18 @@
     <div id="msgPanel">
         <div class="container-fluid">
             <div class="row" style="margin-bottom: 10px;">
-                <div class="col-sm-4">
+                <div class="col-sm-2">
+                    <div class="checkbox">
+                        <label style="color: white">
+                            <input type="checkbox" ng-model="rsv"> Reservado
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-3">
                     <select class="form-control" ng-model="selectedUser" ng-options="o as o for o in users"></select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" ng-model="action" ng-options="o as o for o in actions"></select>
                 </div>
             </div>
             <div class="row" style="margin-bottom: 10px;">

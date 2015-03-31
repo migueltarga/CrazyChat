@@ -49,7 +49,7 @@ angular.module('CrazyChat.controllers', [])
                 $modalInstance.dismiss('cancel');
             };
             $scope.submit = function() {
-                if($scope.carregando) return;
+                if ($scope.carregando) return;
                 $scope.error = false;
                 if (!$scope.text_captcha) {
                     $scope.error = 'Digite o que você vê na imagem'
@@ -72,15 +72,36 @@ angular.module('CrazyChat.controllers', [])
                 len = 0,
                 msgToken = false;
 
+            $scope.actions = [
+                'fala para',
+                'pergunta para',
+                'concorda com',
+                'discorda de',
+                'desculpa-se com',
+                'surpreende-se com',
+                'murmura para',
+                'sorri para',
+                'suspira por',
+                'flerta com',
+                'entusiasma-se com',
+                'ri de',
+                'dá um fora em',
+                'briga com',
+                'grita com',
+                'xinga'
+            ];
+
+            $scope.action = $scope.actions[0];
+
             $scope.nick = BOL.getNick();
             $scope.autoscroll = true;
             $scope.users = [];
             $scope.messages = [];
 
-            $scope.sendMsg = function(){
-                if(!msgToken) return;
-                if($scope.selectedUser)
-                BOL.sendMessage(msgToken, $scope.msgtext, $scope.selectedUser, false);
+            $scope.sendMsg = function() {
+                if (!msgToken) return;
+                if ($scope.selectedUser)
+                    BOL.sendMessage(msgToken, $scope.msgtext, $scope.selectedUser, $scope.rsv, $scope.action);
                 $scope.msgtext = '';
             }
 
@@ -102,21 +123,21 @@ angular.module('CrazyChat.controllers', [])
                         angular.forEach(msgs, function(msg) {
                             $scope.messages.push({
                                 type: (msg[7]) ? 'join' : 'msg',
-                                uolk: (msg[2]) ? 'http://'+msg[2]+'.avataruol.com.br/thumb_avatar.jpg' : '',
-                                time : msg[3],
-                                color : msg[4],
+                                uolk: (msg[2]) ? 'http://' + msg[2] + '.avataruol.com.br/thumb_avatar.jpg' : '',
+                                time: msg[3],
+                                color: msg[4],
                                 sender: msg[5],
                                 pvt: (msg[7]) ? true : false,
                                 action: (msg[8]) ? msg[8] : '',
                                 receiver: (msg[10]) ? msg[10] : '',
-                                message : (msg[11]) ? msg[11].trim() : '',
+                                message: (msg[11]) ? msg[11].trim() : '',
                                 icon: (msg[12]) ? msg[12] : ''
                             });
                         });
                     }
                     if (/Load_Combo.\x22re/.test(buffer)) {
                         var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/);
-                        if(lista){
+                        if (lista) {
                             lista = lista[1];
                             $scope.$apply(function() {
                                 $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
@@ -124,10 +145,10 @@ angular.module('CrazyChat.controllers', [])
                         }
                     }
                     buffer = '';
-                }else if (xhr.readyState == 4) {
-                    if(error = xhr.responseText.match(/uol.com.br\/goroom.html?erro=(\d+)/))
+                } else if (xhr.readyState == 4) {
+                    if (error = xhr.responseText.match(/uol.com.br\/goroom.html?erro=(\d+)/))
                         alert(BOL.ErrorMensagem(error));
-                    if('/uol.com.br\/esgotada.jhtm/'.test(xhr.responseText))
+                    if ('/uol.com.br\/esgotada.jhtm/'.test(xhr.responseText))
                         alert('Sala cheia');
                     console.log('DESCONECTOU');
                 }

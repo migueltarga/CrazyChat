@@ -137,12 +137,12 @@ angular.module('CrazyChat.services', [])
             getListen: function() {
                 return listen_url;
             },
-            sendMessage: function(token, msg, receiver, pvt) {
+            sendMessage: function(token, msg, receiver, pvt, action) {
                 var def = $q.defer(),
                     params = {
                         pk: '',
                         re: (receiver == 'Todos') ? '' : receiver,
-                        st: 'fala para',
+                        st: (!action) ? 'fala para' : action,
                         so: 'NULL',
                         ei: 'NULL',
                         me: msg
