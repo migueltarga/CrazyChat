@@ -49,17 +49,20 @@ angular.module('CrazyChat.controllers', [])
                 $modalInstance.dismiss('cancel');
             };
             $scope.submit = function() {
+                if($scope.carregando) return;
                 $scope.error = false;
                 if (!$scope.text_captcha) {
-                    $scope.error = 'Digite o que você vê na imagem a cima.'
+                    $scope.error = 'Digite o que você vê na imagem'
                     return;
                 }
+                $scope.carregando = true;
                 BOL.postCaptcha($scope.text_captcha).then(function(result) {
+                    $scope.carregando = false;
                     $modalInstance.close(true);
                 }, function(error) {
                     $scope.error = error;
+                    $scope.carregando = false;
                 });
-                //$modalInstance.close($scope.text_captcha);
             };
         }
     ])
@@ -76,7 +79,8 @@ angular.module('CrazyChat.controllers', [])
 
             $scope.sendMsg = function(){
                 if(!msgToken) return;
-                BOL.sendMessage(msgToken, $scope.msgtext);
+                if($scope.selectedUser)
+                BOL.sendMessage(msgToken, $scope.msgtext, $scope.selectedUser, false);
                 $scope.msgtext = '';
             }
 
@@ -112,11 +116,12 @@ angular.module('CrazyChat.controllers', [])
                     }
                     if (/Load_Combo.\x22re/.test(buffer)) {
                         var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/);
-                        if(lista)
-                            lista = lista[1]; //gambiarra
-                        $scope.$apply(function() {
-                            $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
-                        })
+                        if(lista){
+                            lista = lista[1];
+                            $scope.$apply(function() {
+                                $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
+                            })
+                        }
                     }
                     buffer = '';
                 }else if (xhr.readyState == 4) {

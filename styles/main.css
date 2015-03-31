@@ -17,6 +17,9 @@ body {
     cursor: pointer;
 }
 
+.captcha-modal{
+    margin-bottom: 0;
+}
 
 #wrapper{
     position:absolute;
@@ -48,7 +51,7 @@ body {
 #userlist{
     position: absolute;
     top:0;
-    bottom:74px;
+    bottom:95px;
     width:220px;
     right:0; 
     overflow:auto;   
@@ -58,7 +61,7 @@ body {
 }
 
 #msgPanel{
-    padding: 20px 0;
+    padding: 10px 0 0 0;
     position:absolute;
     bottom:0px;
     left:0px;
@@ -70,3 +73,6 @@ body {
 	padding: 3px 5px;
 }
 
+.list-user{
+    margin-left: 10px;
+}

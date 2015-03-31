@@ -1,15 +1,20 @@
-<div class="modal-body">
-	<div class="alert alert-danger" ng-show="error">
-      	{{error}}
+<div class="modal-body captcha-modal">
+    <div class="alert alert-danger" ng-show="error">
+        {{error}}
     </div>
-    <img csp-src="{{captcha}}">
-    <div class="form-group">
-        <div class="col-xs-12">
-            <input type="text" ng-model="text_captcha">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-xs-12 text-center">
+                <img csp-src="{{captcha}}">
+            </div>
         </div>
-    </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <input type="text" ng-model="text_captcha" class="form-control" ng-enter="submit()" ng-disabled="carregando" autofocus>
+            </div>
+        </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="submit()">OK</button>
+    <button class="btn btn-primary" ng-click="submit()" ng-disabled="carregando">OK</button>
 </div>

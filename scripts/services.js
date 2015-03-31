@@ -27,7 +27,6 @@ angular.module('CrazyChat.services', [])
             getNick: function() {
                 return nick;
             },
-
             getCategories: function() {
                 var def = $q.defer();
                 $http.get('http://bpbol.uol.com.br/')
@@ -138,20 +137,22 @@ angular.module('CrazyChat.services', [])
             getListen: function() {
                 return listen_url;
             },
-            sendMessage: function(token, msg) {
+            sendMessage: function(token, msg, receiver, pvt) {
                 var def = $q.defer(),
-                    _this = this;
+                    params = {
+                        pk: '',
+                        re: (receiver == 'Todos') ? '' : receiver,
+                        st: 'fala para',
+                        so: 'NULL',
+                        ei: 'NULL',
+                        me: msg
+                    };
+
+                if (pvt) params.ty = false;
                 $http({
                         method: 'POST',
-                        url: 'http://bp3.bpbol.uol.com.br/send.html?ro='+token,
-                        data: this.serializeData({
-                            pk: '',
-                            re: '',
-                            st: 'fala para',
-                            so: 'NULL',
-                            ei: 'NULL',
-                            me: msg
-                        }),
+                        url: 'http://bp3.bpbol.uol.com.br/send.html?ro=' + token,
+                        data: this.serializeData(params),
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
