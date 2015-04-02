@@ -109,7 +109,12 @@ angular.module('CrazyChat.controllers', [])
                 return (a.toUpperCase() > b.toUpperCase()) ? -1 : 1;
             }
 
+            $scope.selectNick = function(nick){
+                $scope.selectedUser = nick;
+            }
+
             xhr.onreadystatechange = function() {
+                var msgs;
                 console.log(xhr.status, xhr.readyState);
                 if (xhr.status == 200 && xhr.readyState >= 3) {
                     buffer = xhr.responseText.substr(len, xhr.responseText.length - len);
@@ -118,8 +123,20 @@ angular.module('CrazyChat.controllers', [])
                     if (!msgToken && /Batepapo.query_str/.test(buffer)) {
                         msgToken = buffer.match(/Batepapo.query_str\s=\s\x22([^\x22]+)/)[1];
                     }
+                    
+                    if (/Load_Combo.\x22re/.test(buffer)) {
+                        var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/);
+                        if (lista) {
+                            lista = lista[1];
+                            $scope.$apply(function() {
+                                $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
+                            })
+                            if(!$scope.selectedUser) $scope.selectedUser = $scope.users[0];
+                        }
+                    }
+
                     if (/<div class=\x22msgContentBox/.test(buffer)) {
-                        var msgs = /(tsPerfilBP,'([^\x27]+)'\);[\r\n\s]+<\/script>[\r\n\s]+)?<small>([^<]+)<\/small>\n.+color="(#[A-Fa-f\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/g.execAll(buffer);
+                        msgs = /(tsPerfilBP,'([^\x27]+)'\);[\r\n\s]+<\/script>[\r\n\s]+)?<small>([^<]+)<\/small>\n.+color="(#[A-Fa-f\d]{6})">([^<]+).+[\r\n\s]+(<em>([^<]+)<\/em>[\r\n\s]+)?<i>([^<]+)<\/i>[\r\n\s]+(<b>([^<]+)<\/b>)?[\r\n\s]+([^<]+)(<img src="([^\x22]+))?/g.execAll(buffer);
                         angular.forEach(msgs, function(msg) {
                             $scope.messages.push({
                                 type: (msg[7]) ? 'join' : 'msg',
@@ -134,17 +151,11 @@ angular.module('CrazyChat.controllers', [])
                                 icon: (msg[12]) ? msg[12] : ''
                             });
                         });
-                    }
-                    if (/Load_Combo.\x22re/.test(buffer)) {
-                        var lista = buffer.match(/Load_Combo.\x22re\x22,\s\x22([^\x22]+)/);
-                        if (lista) {
-                            lista = lista[1];
-                            $scope.$apply(function() {
-                                $scope.users = lista.split(">").concat().sort(Sort_CI).concat(["Todos"]).reverse();
-                            })
+                        if(msgs){
+                            buffer = '';
+                            msgs = '';
                         }
                     }
-                    buffer = '';
                 } else if (xhr.readyState == 4) {
                     if (error = xhr.responseText.match(/uol.com.br\/goroom.html?erro=(\d+)/))
                         alert(BOL.ErrorMensagem(error));
