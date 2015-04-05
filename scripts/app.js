@@ -6,9 +6,10 @@ angular.module('CrazyChat', [
     'CrazyChat.services',
     'CrazyChat.directives'
 ]).
-config([
-    '$routeProvider',
-    function($routeProvider) {
+config(['$compileProvider', '$routeProvider', function($compileProvider, $routeProvider) {
+        var currentImgSrcSanitizationWhitelist = $compileProvider.imgSrcSanitizationWhitelist();
+        var newImgSrcSanitizationWhiteList = currentImgSrcSanitizationWhitelist.toString().slice(0, -1) + '|chrome-extension:' + currentImgSrcSanitizationWhitelist.toString().slice(-1);
+        $compileProvider.imgSrcSanitizationWhitelist(newImgSrcSanitizationWhiteList);
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',

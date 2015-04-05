@@ -165,6 +165,33 @@ angular.module('CrazyChat.services', [])
                     });
                 return def.promise;
             },
+            getEmoticons: function() {
+                return [
+                    'images/k70.gif',
+                    'images/k71.gif',
+                    'images/k72.gif',
+                    'images/k73.gif',
+                    'images/k74.gif',
+                    'images/k75.gif',
+                    'images/k76.gif',
+                    'images/k77.gif',
+                    'images/k78.gif',
+                    'images/k91.gif',
+                    'images/k92.gif',
+                    'images/k79.gif',
+                    'images/k95.gif',
+                    'images/k80.gif',
+                    'images/k81.gif',
+                    'images/k82.gif',
+                    'images/k83.gif',
+                    'images/k84.gif',
+                    'images/k85.gif',
+                    'images/k86.gif',
+                    'images/k87.gif',
+                    'images/k88.gif',
+                    'images/k89.gif'
+                ];
+            },
             serializeData: function(data) {
                 if (!angular.isObject(data)) {
                     return ((data == null) ? "" : data.toString());

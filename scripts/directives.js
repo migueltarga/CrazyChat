@@ -47,4 +47,17 @@ angular.module('CrazyChat.directives', [])
                 });
             }
         };
+    })
+    .directive('hires', function() {
+        return {
+            restrict: 'A',
+            scope: {
+                hires: '@'
+            },
+            link: function(scope, element, attrs) {
+                element.bind('load', function() {
+                    element.attr('src', scope.hires);
+                });
+            }
+        };
     });

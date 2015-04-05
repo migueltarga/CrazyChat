@@ -91,12 +91,19 @@ angular.module('CrazyChat.controllers', [])
                 'xinga'
             ];
 
+            $scope.emoticons = BOL.getEmoticons();
+
             $scope.action = $scope.actions[0];
 
             $scope.nick = BOL.getNick();
             $scope.autoscroll = true;
             $scope.users = [];
             $scope.messages = [];
+
+
+            $scope.emotions = {
+                isopen: false
+            }
 
             $scope.sendMsg = function() {
                 if (!msgToken) return;
