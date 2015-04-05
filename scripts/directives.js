@@ -14,6 +14,7 @@ angular.module('CrazyChat.directives', [])
             link: function(scope, element, attributes) {
                 scope.$watch('cspSrc', function(newValue) {
                     if (newValue !== undefined) {
+                        element.attr('src', 'images/carregando.gif');
                         imageLoader.load(newValue).then(function(blob) {
                             attributes.$set('src', blob);
                         });
@@ -44,19 +45,6 @@ angular.module('CrazyChat.directives', [])
             link: function(scope, element, attrs, model) {
                 $timeout(function() {
                     element[0].focus();
-                });
-            }
-        };
-    })
-    .directive('hires', function() {
-        return {
-            restrict: 'A',
-            scope: {
-                hires: '@'
-            },
-            link: function(scope, element, attrs) {
-                element.bind('load', function() {
-                    element.attr('src', scope.hires);
                 });
             }
         };
