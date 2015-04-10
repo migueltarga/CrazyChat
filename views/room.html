@@ -1,24 +1,27 @@
 <div id="wrapper">
     <div id="topPanel">
-        <div id="chat" scroll-glue="autoscroll">
+        <div id="chat" scroll-glue>
             <div data-ng-repeat="msg in messages" ng-class="{'well well-sm': msg.receiver == nick || msg.sender == nick}">
                 {{msg.time}} <span ng-style="{'color':msg.color}"><b class="mao" ng-click="selectNick(msg.sender)">{{msg.sender}}</b></span> <i ng-show="msg.pvt">(reservadamente) </i><i>{{msg.action}}</i> <b>{{msg.receiver}}</b> {{msg.message}}
             </div>
         </div>
-        <div id="userlist">
-            <ul class="nav nav-list" id="nicks">
-                <li data-ng-repeat="user in users" class="list-user mao" ng-click="selectNick(user)">
-                    <i class="fa" ng-class="user == 'Todos' && 'fa-users' || 'fa-user'"></i> {{user}}</span>
+        <div id="userlist" ng-scrollable>
+            <ul class="nav nav-list">
+                <li data-ng-repeat="user in users" class="list-user mao" ng-class="{'active' : selectedUser == user}">
+                    <a href ng-click="selectNick(user)">
+                        <i class="fa" ng-class="user == 'Todos' && 'fa-users' || 'fa-circle-o online'"></i>
+                        <span>{{user}}</span>
+                    </a>
                 </li>
             </ul>
         </div>
     </div>
     <div id="msgPanel">
         <div class="container-fluid">
-            <div class="row" style="margin-bottom: 10px;">
+            <div class="row">
                 <div class="col-sm-2">
                     <div class="checkbox">
-                        <label style="color: white">
+                        <label>
                             <input type="checkbox" ng-model="rsv"> Reservado
                         </label>
                     </div>
@@ -30,7 +33,7 @@
                     <select class="form-control" ng-model="action" ng-options="o as o for o in actions"></select>
                 </div>
             </div>
-            <div class="row" style="margin-bottom: 10px;">
+            <div class="row" style="margin-bottom: 4px;">
                 <div class="col-lg-12">
                     <div class="input-group">
                         <div class="input-group-btn">

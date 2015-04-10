@@ -1,6 +1,7 @@
 angular.module('CrazyChat', [
     'ngRoute',
     'ui.bootstrap',
+    'ngScrollable',
     'luegg.directives',
     'CrazyChat.controllers',
     'CrazyChat.services',

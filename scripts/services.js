@@ -189,7 +189,8 @@ angular.module('CrazyChat.services', [])
                     'images/k86.gif',
                     'images/k87.gif',
                     'images/k88.gif',
-                    'images/k89.gif'
+                    'images/k89.gif',
+                    'images/k00.gif'
                 ];
             },
             serializeData: function(data) {
