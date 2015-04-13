@@ -13,6 +13,7 @@
     },
     "permissions": [
         "http://*.uol.com.br/*",
-        "notifications"
+        "notifications",
+        "fullscreen"
     ]
 }

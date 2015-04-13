@@ -2,8 +2,6 @@ angular.module('CrazyChat.controllers', [])
     .controller('conectorCtrl', ['$scope', 'BOL', '$modal', '$location',
         function($scope, BOL, $modal, $location) {
 
-            //$location.path("/room");
-
             BOL.getCategories().then(function(cat) {
                 $scope.categories = cat;
             })
@@ -34,7 +32,14 @@ angular.module('CrazyChat.controllers', [])
                         }
                     });
                     modal.result.then(function(result) {
-                        $location.path("/room");
+                        chrome.app.window.create('../index.html#room', {
+                                id: 'foo'
+                            },
+                            function(win) {
+                                win.nick = BOL.getNick();
+                                win.listen = result;
+                                win.maximize();
+                            });
                     });
                 })
             }
@@ -60,7 +65,7 @@ angular.module('CrazyChat.controllers', [])
                 $scope.carregando = true;
                 BOL.postCaptcha($scope.text_captcha).then(function(result) {
                     $scope.carregando = false;
-                    $modalInstance.close(true);
+                    $modalInstance.close(result);
                 }, function(error) {
                     $scope.error = error;
                     $scope.carregando = false;
@@ -72,7 +77,8 @@ angular.module('CrazyChat.controllers', [])
         function($scope, BOL) {
             var xhr = new XMLHttpRequest(),
                 len = 0,
-                msgToken = false;
+                msgToken = false,
+                win_params = chrome.app.window.current();
 
             $scope.actions = [
                 'fala para',
@@ -97,7 +103,7 @@ angular.module('CrazyChat.controllers', [])
 
             $scope.action = $scope.actions[0];
 
-            $scope.nick = BOL.getNick();
+            $scope.nick = win_params.nick;
             $scope.autoscroll = true;
             $scope.users = [];
             $scope.messages = [];
@@ -171,7 +177,8 @@ angular.module('CrazyChat.controllers', [])
                     console.log('DESCONECTOU');
                 }
             };
-            xhr.open('GET', BOL.getListen(), true);
+            console.log(win_params);
+            xhr.open('GET', win_params.listen, true);
             xhr.send();
         }
     ])

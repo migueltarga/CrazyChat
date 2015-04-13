@@ -7,8 +7,9 @@ html {
 body {
     margin: 0px;
     padding: 0px;
-    font-family: 'Open Sans', Arial, sans-serif;
 }
+
+
 
 .main {
     margin-top: 15px;
@@ -113,6 +114,7 @@ body {
     right: 220px;
     position: fixed;
     background-color: #445166;
+    color: white;
 }
 
 .nav-list > li > a {

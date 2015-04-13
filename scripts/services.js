@@ -126,16 +126,12 @@ angular.module('CrazyChat.services', [])
                     .success(function(data) {
                         if (error = data.match(/top.location.replace.\x27.+goroom.html\?erro=(\d+)/))
                             return def.reject(_this.ErrorMensagem(error[1]));
-                        listen_url = data.match(/listenURL\s=\s\x27([^\x27]+)/)[1];
-                        def.resolve(listen_url);
+                        def.resolve(data.match(/listenURL\s=\s\x27([^\x27]+)/)[1]);
                     })
                     .error(function() {
                         def.reject("Failed to post captcha");
                     });
                 return def.promise;
-            },
-            getListen: function() {
-                return listen_url;
             },
             sendMessage: function(token, msg, receiver, pvt, action) {
                 var def = $q.defer(),
