@@ -9,7 +9,7 @@ angular.module('CrazyChat', [
 ]).
 config(['$compileProvider', '$routeProvider', function($compileProvider, $routeProvider) {
         var currentImgSrcSanitizationWhitelist = $compileProvider.imgSrcSanitizationWhitelist();
-        newImgSrcSanitizationWhiteList = currentImgSrcSanitizationWhitelist.toString().slice(0, -1) + '|chrome-extension:|filesystem:chrome-extension:|blob:chrome-extension%3A' + currentImgSrcSanitizationWhitelist.toString().slice(-1);
+        newImgSrcSanitizationWhiteList = currentImgSrcSanitizationWhitelist.toString().slice(0, -1) + '|http:|chrome-extension:|filesystem:chrome-extension:|blob:chrome-extension%3A' + currentImgSrcSanitizationWhitelist.toString().slice(-1);
         $compileProvider.imgSrcSanitizationWhitelist(newImgSrcSanitizationWhiteList);
 
         $routeProvider

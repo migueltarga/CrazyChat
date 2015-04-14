@@ -2,7 +2,7 @@
     <div id="topPanel">
         <div id="chat" scroll-glue>
             <div data-ng-repeat="msg in messages" ng-class="{'well well-sm': msg.receiver == nick || msg.sender == nick}">
-                {{msg.time}} <span ng-style="{'color':msg.color}"><b class="mao" ng-click="selectNick(msg.sender)">{{msg.sender}}</b></span> <i ng-show="msg.pvt">(reservadamente) </i><i>{{msg.action}}</i> <b>{{msg.receiver}}</b> {{msg.message}}
+                {{msg.time}} <img csp-src="{{msg.uolk}}" width="32" height="32" ng-show="msg.uolk"><span ng-style="{'color':msg.color}"><b class="mao" ng-click="selectNick(msg.sender)">{{msg.sender}}</b></span> <i ng-show="msg.pvt">(reservadamente) </i><i>{{msg.action}}</i> <b>{{msg.receiver}}</b> {{msg.message}}
             </div>
         </div>
         <div id="userlist" ng-scrollable>

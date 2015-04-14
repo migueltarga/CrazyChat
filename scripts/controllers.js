@@ -32,9 +32,7 @@ angular.module('CrazyChat.controllers', [])
                         }
                     });
                     modal.result.then(function(result) {
-                        chrome.app.window.create('../index.html#room', {
-                                id: 'foo'
-                            },
+                        chrome.app.window.create('../index.html#room', {},
                             function(win) {
                                 win.nick = BOL.getNick();
                                 win.listen = result;
@@ -57,7 +55,7 @@ angular.module('CrazyChat.controllers', [])
             };
             $scope.submit = function() {
                 if ($scope.carregando) return;
-                $scope.error = false;
+                $scope.error    = false;
                 if (!$scope.text_captcha) {
                     $scope.error = 'Digite o que você vê na imagem'
                     return;
@@ -167,7 +165,6 @@ angular.module('CrazyChat.controllers', [])
                             });
                         });
                         buffer = '';
-                        msgs = '';
                     }
                 } else if (xhr.readyState == 4) {
                     if (error = xhr.responseText.match(/uol.com.br\/goroom.html?erro=(\d+)/))
